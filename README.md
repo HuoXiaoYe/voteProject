@@ -24,3 +24,6 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     ref 可以绑定在DOM元素上，这是 使用this.$refs.refname 就是一个DOM对象 /n
         坑：将ref绑定在for循环渲染出来的DOM元素上，这时this.$refs.refname不再是一个object,而是一个数组，必须通过this.$refs.refname[0]来访问
     ref 可以绑定在子组件上，这是使用this.$refs.componentname 就是子组件实例，可以调用子组件的方法，访问子组件的数据
+### 关于axios的代理问题
+    还么想好怎么说....
+### 关于mint-ui message-box的iPhone适配问题
