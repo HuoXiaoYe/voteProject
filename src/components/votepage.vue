@@ -64,9 +64,11 @@
 			}
 		},
 		methods: {
+    // 给子元素调用的方法 如果子元素有未选中的input，unCheckedNum会增1.
 			totalUnCheckedNum(num) {
 				this.unCheckedNum += parseInt(num);
 			},
+      // 从服务器获取数据的函数
 			getData() {
 				// this.$axios.get(this.HOST + "/front/voteResult/toAdd?pwd=" + this.id).then((data) => {
 				this.$axios.get("http://officalwechat.wh.bjtu.edu.cn:7080/api001/front/voteResult/toAdd?pwd=" + this.id + "&rnd=" +
@@ -81,9 +83,11 @@
 					console.log(err)
 				})
 			},
+       // 给子元素调用的方法 如果子组件中 选中了另选他人 但没有填写内容，则isReturnSubmit 自增
 			returnSubmit() {
 				this.isReturnSubmit += 1
 			},
+      // 向服务器发送数据的函数，有可能验证不通过，所以重置一些属性
 			postdata() {
 				this.$refs.card.forEach((item) => {
 					item.checkAllRadioSelected()
@@ -92,11 +96,19 @@
 				this.unCheckedNum = 0;
 				this.isReturnSubmit = 0;
 			},
+       // 判断是否向服务器发送数据的函数
 			isSubmit(obj) {
+        var str = '';
 				if (this.unCheckedNum) {
-					this.$msgbox.alert(`您一共有${this.unCheckedNum}项未选择`)
-					return
+				  str += `您一共有${this.unCheckedNum}项未选择`;	
 				}
+        if (this.isReturnSubmit) {
+				  str += ` 另选他人(或民主推荐不可为空)`;	
+				}
+        if(str){
+          alert(str)
+          return
+        }
 				if (this.isReturnSubmit == 0) {
 					this.$msgbox.confirm('确认提交您的选票').then(() => {
 						var form = document.querySelector("#form1");
