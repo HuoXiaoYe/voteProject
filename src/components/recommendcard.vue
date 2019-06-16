@@ -24,7 +24,7 @@
 				isEditable: true
 			}
 		},
-		props: ["data", "index"],
+		props: ["data", "index","alertnum"],
 		methods: {
 
 			checkAllRadioSelected() {
@@ -37,18 +37,24 @@
 					return;
 				}
 				if (liArr[0].getElementsByTagName('input')[0].checked) {
+					/* 值为空 */
 					if (!liArr[0].getElementsByTagName('input')[1].value) {
-						/* 值为空 */
-						this.$msgbox.alert('您所选择的其他人(或民主推荐)不可为空')
+						// if(!this.alertnum){
+						// 	alert('您所选择的其他人(或民主推荐)不可为空')
+						// 	this.$emit("returnsunmit")
+						// 	this.$emit("alertadd");
+						// }
+						
 						this.$emit("returnsunmit")
+						this.$emit("alertadd");
 						return;
-					} else {
+					}else{
 						/* 有值且被选中了 */
 						flag = true
 					}
 
 				}
-				if (!flag) {
+				if(!flag){
 					this.$emit("add", 1);
 				}
 			},
@@ -60,10 +66,8 @@
 				this.$refs[refstr].checked = true;
 			},
 			changeAgreeDif(refstr) {
-				console.log(this.refsArr)
 
 				this.refsArr.forEach((item, i) => {
-					console.log(item)
 					this.$refs[item].checked = false;
 				})
 				this.$refs[refstr].checked = true;

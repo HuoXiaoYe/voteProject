@@ -9,13 +9,14 @@
 					<input type="hidden" name="pwd" :value="id">
 					<split desc="部门负责人竞选投票" :total="data.positionFrontFormList1.length"></split>
 					<div v-for="(item,index) of data.positionFrontFormList1" :key="index">
-						<card @func="isSubmit" @returnsunmit="returnSubmit" ref="card" :data="item" @add="totalUnCheckedNum" :index="index"></card>
+						<card :alertnum="alertNum" @alertadd="alertNumAdd" @func="isSubmit" @returnsunmit="returnSubmit" ref="card" :data="item" @add="totalUnCheckedNum" :index="index"></card>
 						<greyspace></greyspace>
 					</div>
 					<split desc="部门负责人民主推荐" v-if="data.positionFrontFormList2.length" :total="data.positionFrontFormList2.length"></split>
 					<div v-for="(item,index) of data.positionFrontFormList2" :key="index+100">
 						<!-- <card :data="item" @func="isSubmit" @add="totalUnCheckedNum" ref="card" :index="index"></card> -->
-						<commendcard ref="card" @add="totalUnCheckedNum" @returnsunmit="returnSubmit" :data="item" :index="index"></commendcard>
+						
+						<commendcard :alertnum="alertNum" @alertadd="alertNumAdd" ref="card" @add="totalUnCheckedNum" @returnsunmit="returnSubmit" :data="item" :index="index"></commendcard>
 						<greyspace></greyspace>
 					</div>
 					<!-- <commendcard :data="item" :index="index"></commendcard> -->
@@ -60,34 +61,35 @@
 				totalElector: 0,
 				totalParticipant: 0,
 				isReturnSubmit: 0,
-				totalPageDisplay: false
+				totalPageDisplay: false,
+				alertNum : 0
 			}
 		},
 		methods: {
-    // 给子元素调用的方法 如果子元素有未选中的input，unCheckedNum会增1.
+			alertNumAdd(){
+				this.alertNum +=1;
+			},
+			returnSubmit() {
+				this.isReturnSubmit += 1
+			},
 			totalUnCheckedNum(num) {
 				this.unCheckedNum += parseInt(num);
 			},
-      // 从服务器获取数据的函数
 			getData() {
 				// this.$axios.get(this.HOST + "/front/voteResult/toAdd?pwd=" + this.id).then((data) => {
 				this.$axios.get("http://officalwechat.wh.bjtu.edu.cn:7080/api001/front/voteResult/toAdd?pwd=" + this.id + "&rnd=" +
-					Math.random()).then((data) => {
-					if (data.data.value && data.data.value == -1) {
-						this.$msgbox.alert(data.data.label);
+					Math.random()).then((response) => {
+					if (response.data.value && response.data.value == -1) {
+						this.$msgbox.alert(response.data.label);
 						return;
 					}
 					this.totalPageDisplay = true;
-					this.data = data.data;
+					this.data = response.data;
 				}).catch((err) => {
 					console.log(err)
 				})
 			},
-       // 给子元素调用的方法 如果子组件中 选中了另选他人 但没有填写内容，则isReturnSubmit 自增
-			returnSubmit() {
-				this.isReturnSubmit += 1
-			},
-      // 向服务器发送数据的函数，有可能验证不通过，所以重置一些属性
+			
 			postdata() {
 				this.$refs.card.forEach((item) => {
 					item.checkAllRadioSelected()
@@ -95,31 +97,31 @@
 				this.isSubmit()
 				this.unCheckedNum = 0;
 				this.isReturnSubmit = 0;
+				this.alertNum = 0
 			},
-       // 判断是否向服务器发送数据的函数
 			isSubmit(obj) {
-        var str = '';
+				var str = ''
+				if(this.alertNum){
+					str += "您所选择的其他人(或民主推荐)不可为空 "
+				}
 				if (this.unCheckedNum) {
-				  str += `您一共有${this.unCheckedNum}项未选择`;	
+					str+= `您一共有${this.unCheckedNum}项未选择`
 				}
-        if (this.isReturnSubmit) {
-				  str += ` 另选他人(或民主推荐不可为空)`;	
+				if(str){
+					alert(str);
+					return
 				}
-        if(str){
-          alert(str)
-          return
-        }
 				if (this.isReturnSubmit == 0) {
-					this.$msgbox.confirm('确认提交您的选票').then(() => {
+					if(confirm('确认提交您的选票')){
 						var form = document.querySelector("#form1");
 						var formdata = new FormData(form);
 						// this.$axios.post(this.HOST + '/front/voteResult/add', formdata)
 						this.$axios.post('http://officalwechat.wh.bjtu.edu.cn:7080/api001/front/voteResult/add?rnd=' + Math.random(),
 								formdata)
 							.then((response) => {
-								// alert(response.data.label);
-								this.$msgbox.alert(response.data.label);
-								// alert(response.data.value);
+								// this.$msgbox.alert(response.data.label);
+								alert(response.data.label);
+								// this.$msgbox.alert(response.data.value);
 								// console.log(response)
 								var res = response.data.value
 								if (res == 1) {
@@ -130,12 +132,16 @@
 							.catch(function(error) {
 								console.log(error);
 							});
-					})
+					}
+					// this.$msgbox.confirm('确认提交您的选票').then(() => {
+						
+					// })
 				}
 			}
 		},
 		created() {
 			this.getData()
+			console.log(2)
 		},
 
 		/* 	watch: {

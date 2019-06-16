@@ -66,7 +66,7 @@
 				isEditable: true
 			}
 		},
-		props: ['data', "index",""],
+		props: ['data', "index","alertnum"],
 		methods: {
 			changeAgree(isckecked, index) {
 				this.isEditable = true;
@@ -158,9 +158,14 @@
 				if (liArr[liArr.length - 2].getElementsByTagName('input')[0].checked) {
 					if (!liArr[liArr.length - 2].getElementsByTagName('input')[1].value) {
 						/* 值为空 */
-						this.$msgbox.alert('您所选择的其他人(或民主推荐)不可为空')
+						// if(!this.alertnum){
+						// 	alert('您所选择的其他人(或民主推荐)不可为空')
+						// 	this.$emit("returnsunmit")
+						// 	this.$emit("alertadd")
+						// }
 						this.$emit("returnsunmit")
-						return;
+						this.$emit("alertadd")
+						// return;
 					}else{
 						/* 有值且被选中了 */
 						/* flag = true */
@@ -190,7 +195,11 @@
 		},
 		created() {
 			this.initArr()
-
+		},
+		watch:{
+			alertnum(newval){
+				console.log(newval)
+			}
 		}
 	}
 </script>

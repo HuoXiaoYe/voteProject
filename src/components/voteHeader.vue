@@ -3,7 +3,7 @@
 		<div class="desc">
 			<img src="../assets/logo.png" alt="">
 			<div class="school">
-				<p class="big">家里蹲大学</p>
+				<p class="big">北京交通大学威海校区</p>
 				<p class="small">部门负责人选聘系统</p>
 			</div>
 		</div>
