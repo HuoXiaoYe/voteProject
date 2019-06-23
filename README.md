@@ -19,6 +19,13 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## 算法
+  * 1. 每一个职位的所有同意按钮和下面的另选他人及本岗位不发表任何建议按钮是互斥的，当点击另选他人按钮时，上面的所有选中将会被清空，当选中
+  上面的按钮时，下面的点击另选他人按钮会被取消。
+  * 2. 当选中他人时，若不再后面填写信息，则 `提交投票` 会提示错误
+  * 3. 当有被选人没有发表意见时，提交投票会 提示 有多少人未发表意见
+
 ## 心得
 ### 关于ref的使用: 
     ref 可以绑定在DOM元素上，这是 使用this.$refs.refname 就是一个DOM对象 /n
