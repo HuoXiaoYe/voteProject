@@ -26,6 +26,17 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
   * 当选中他人时，若不再后面填写信息，则 `提交投票` 会提示错误
   * 当有被选人没有发表意见时，提交投票会 提示 有多少人未发表意见
 
+
+
+
+
+> 设计图与实际效果略有不符。
+
+![avatar](./images/page.png)
+![avatar](./images/confirm.png)
+![avatar](./images/tip.png)
+![avatar](./images/success.png)
+
 ## 心得
 ### 关于ref的使用: 
     ref 可以绑定在DOM元素上，这是 使用this.$refs.refname 就是一个DOM对象 /n
